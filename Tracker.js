@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 const tb = require('terminal-banner').terminalBanner
+const consoleTable = require('console.table');
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -78,9 +79,20 @@ function runSearch() {
         break;
     
       case "Quit":
-        quit();
+        console.log("Goodbye");
+        connection.end();
         break;
       }
     });
 
-}
+};
+
+const employeesSearch = () => {
+        var query =
+        "SELECT employee.employeeid, employee.first_name, employee.last_name, role.title, role.salary FROM employee LEFT JOIN role on employee.role_id=role.id";
+        connection.query(query, (err, res) => {
+          if (err) throw err;
+          console.table("\n", res);
+          promptOptions();
+        });
+      };
