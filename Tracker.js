@@ -79,7 +79,7 @@ function runSearch() {
         break;
     
       case "Quit":
-        console.log("Goodbye");
+        console.log("Goodbye :)");
         connection.end();
         break;
       }
@@ -106,3 +106,13 @@ const roleSearch = () => {
           runSearch();
         });
       };
+
+const departmentsSearch = () => {
+        var query =
+        "SELECT * FROM department";
+        connection.query(query, (err, res) => {
+          if (err) throw err;
+          console.table("\n", res);
+          runSearch();
+        });
+      };     
