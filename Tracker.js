@@ -93,6 +93,16 @@ const employeesSearch = () => {
         connection.query(query, (err, res) => {
           if (err) throw err;
           console.table("\n", res);
-          promptOptions();
+          runSearch();
+        });
+      };
+  
+const roleSearch = () => {
+        var query =
+        "SELECT role.title, role.salary FROM employee LEFT JOIN role on employee.role_id=role.id";
+        connection.query(query, (err, res) => {
+          if (err) throw err;
+          console.table("\n", res);
+          runSearch();
         });
       };
