@@ -52,7 +52,7 @@ So that I can organize and plan my business
 
 ## Application gif
 
-![application gif](Assets\giphy2.gif)
+ ![application gif](giphy2.gif)
 
 
 * Check out [SQL Bolt](https://sqlbolt.com/) for some extra MySQL help.
