@@ -205,7 +205,7 @@ const addEmployee = () => {
 						}
 					);
 				}
-				promptOptions();
+				runSearch();
 			});
 	});
 };
