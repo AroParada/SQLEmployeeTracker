@@ -115,4 +115,99 @@ const departmentsSearch = () => {
           console.table("\n", res);
           runSearch();
         });
-      };     
+      };
+      
+const addEmployee = () => {
+  let roleTitles = [];
+	var managersIDs = {};
+	let managersList = [];
+	let managers = [];
+	var roleIds = {};
+
+	var query =
+		"SELECT role.id, role.title, employee.employeeid, employee.first_name, employee.last_name, employee.role_id FROM role LEFT JOIN employee ON role.id=employee.role_id;";
+	connection.query(query, function (err, results) {
+		if (err) throw err;
+		inquirer
+			.prompt([
+				{
+					type: "input",
+					name: "firstname",
+					message: "What is the first name of your employee?",
+				},
+				{
+					type: "input",
+					name: "lastname",
+					message: "What is the last name of your employee?",
+				},
+				{
+					type: "list",
+					name: "roleid",
+					message: "What is the role id of your employee?",
+					choices: function () {
+						for (let i = 0; i < results.length; i++) {
+							var title = `${results[i].id} ${results[i].title}`;
+							roleTitles.push(title);
+							roleIds[title] = results[i].id;
+						}
+						return roleTitles;
+					},
+				},
+				{
+					type: "list",
+					name: "managerid",
+					message: "Who is the employees manager?",
+					choices: function () {
+						for (let i = 0; i < results.length; i++) {
+							if (results[i].title == "Manager") {
+								var name = `${results[i].first_name} ${results[i].last_name}`;
+								managers.push(name);
+								managersIDs[name] = results[i].employeeid;
+							}
+						}
+						managersList = [...managers, "This Employee is a Manager"];
+						return managersList;
+					},
+				},
+			])
+			.then((answer) => {
+				if (answer.managerid === "This Employee is a Manager") {
+					var query =
+						"INSERT INTO employee (first_name, last_name, role_id) VALUES (?,?,?)";
+					connection.query(
+						query,
+						[answer.firstname, answer.lastname, roleIds[answer.roleid]],
+						function (err, res) {
+							if (err) throw err;
+							console.log(
+								"\n",
+								`You have added ${answer.firstname} ${answer.lastname}. What would you like to do next?`
+							);
+						}
+					);
+				} else {
+					var query =
+						"INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+					connection.query(
+						query,
+						[
+							answer.firstname,
+							answer.lastname,
+							roleIds[answer.roleid],
+							managersIDs[answer.managerid],
+						],
+						function (err, res) {
+							if (err) throw err;
+							console.log(
+								"\n",
+								`You have added ${answer.firstname} ${answer.lastname}. What would you like to do next?`
+							);
+						}
+					);
+				}
+				promptOptions();
+			});
+	});
+};
+        
+                
